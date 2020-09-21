@@ -15,7 +15,7 @@ def parser(rawData, firmwareVersion):
             lastChar = currentFirmware[key]['lastIndex'] + 1
             data = rawData[firstChar:lastChar]
 
-    parsedData[key] = currentFirmware[key]['parser'](data)
+            parsedData[key] = currentFirmware[key]['parser'](data)
 
     return parsedData
 

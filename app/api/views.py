@@ -8,6 +8,9 @@ class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    class Meta:
+        ordering = ['-id']
+
 
 class DataList(generics.ListCreateAPIView):
     queryset = Data.objects.all()

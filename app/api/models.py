@@ -25,16 +25,16 @@ class Data(models.Model):
         """
         Use the parser utility functions in utils to decode the payload
         """
-
         firmware = Device.objects.get(deviceId=self.deviceId).firmware
         parsedData = parser(self.rawData, firmware)
+
         self.temp = parsedData['temp']
         self.humidity = parsedData['humidity']
         self.pressure = parsedData['pressure']
         self.luminosity = parsedData['luminosity']
         self.batteryLevel = parsedData['batteryLevel']
         # for key, value in parsedData.items():
-        # 	print(type(key))
-        # 	print(self.__dict__[key])
+        #     print(type(key))
+        #     print(self.__dict__[key])
 
         super(Data, self).save(*args, **kwargs)
