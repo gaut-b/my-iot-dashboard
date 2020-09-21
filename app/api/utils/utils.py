@@ -21,8 +21,8 @@ def parser(rawData, firmwareVersion):
 
 
 def hexToDecimal(bytes):
-    format = '>h'
-    if len(bytes) < 4:
+    format = '>H'
+    if len(bytes) == 2:
         format = '>b'
     data = binascii.unhexlify(bytes)
     return struct.unpack(format, data)[0]
