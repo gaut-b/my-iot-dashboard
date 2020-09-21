@@ -1,6 +1,6 @@
 from django.db import models
 from api.utils.utils import parser
-
+from django.utils.timezone import now
 
 class Device(models.Model):
     model = models.CharField(max_length=20, blank=False, null=False)
@@ -20,6 +20,7 @@ class Data(models.Model):
     pressure = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     luminosity = models.PositiveSmallIntegerField(default=0)
     batteryLevel = models.PositiveSmallIntegerField(default=0)
+    time = models.DateTimeField(null=False, default=now)
 
     def save(self, *args, **kwargs):
         """
@@ -28,13 +29,7 @@ class Data(models.Model):
         firmware = Device.objects.get(deviceId=self.deviceId).firmware
         parsedData = parser(self.rawData, firmware)
 
-        self.temp = parsedData['temp']
-        self.humidity = parsedData['humidity']
-        self.pressure = parsedData['pressure']
-        self.luminosity = parsedData['luminosity']
-        self.batteryLevel = parsedData['batteryLevel']
-        # for key, value in parsedData.items():
-        #     print(type(key))
-        #     print(self.__dict__[key])
+        for data_item in parsedData.items():
+            setattr(self, *data_item)
 
         super(Data, self).save(*args, **kwargs)
