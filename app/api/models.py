@@ -2,6 +2,7 @@ from django.db import models
 from api.utils.utils import parser
 from django.utils.timezone import now
 
+
 class Device(models.Model):
     model = models.CharField(max_length=20, blank=False, null=False)
     deviceId = models.CharField(max_length=10, blank=False, null=False, unique=True)

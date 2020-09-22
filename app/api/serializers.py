@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from api.models import Device, Data
 from django.contrib.auth.models import User
+import datetime
 
 
 class DeviceSerializer(serializers.ModelSerializer):
@@ -14,14 +15,14 @@ class DeviceSerializer(serializers.ModelSerializer):
 class DataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Data
-        fields = ['deviceId', 'rawData', 'temp', 'pressure', 'humidity', 'luminosity', 'batteryLevel']
-        extra_kwargs = {
-            'temp': {'read_only': True},
-            'pressure': {'read_only': True},
-            'luminosity': {'read_only': True},
-            'humidity': {'read_only': True},
-            'batteryLevel': {'read_only': True}
-        }
+        fields = ['deviceId', 'rawData', 'time', 'temp', 'pressure', 'humidity', 'luminosity', 'batteryLevel']
+        read_only_fields = ['temp', 'pressure', 'humidity', 'luminosity', 'batteryLevel']
+
+    def to_internal_value(self, data):
+        # Convert the time send by SIGFOX (epoch) into a right format for DateTimeFied
+        copiedData = data.copy()
+        copiedData['time'] = datetime.datetime.utcfromtimestamp(int(copiedData['time'])).isoformat()
+        return super(DataSerializer, self).to_internal_value(copiedData)
 
 
 class UserSerializer(serializers.ModelSerializer):
