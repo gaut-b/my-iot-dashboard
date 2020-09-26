@@ -22,5 +22,13 @@ services:
           - POSTGRES_PASSWORD=hello_django
           - POSTGRES_DB=hello_django_dev
 
+    redis:
+      image: redis:latest
+      volumes:
+        - redis_data:/var/lib/redis/data/
+      expose:
+        - 6379
+
 volumes:
   postgres_data:
+  redis_data:
