@@ -12,7 +12,12 @@ def update_data_listeners(sender, instance, **kwargs):
     message = {}
 
     for field in instance._meta.get_fields():
-        field_value = str(getattr(instance, field.name))
+        if (field.name == 'time'):
+            # Set time string to isoformat to match the data coming directly from DB
+            field_value = getattr(instance, field.name).isoformat().replace('+00:00', 'Z')
+        else:
+            field_value = str(getattr(instance, field.name))
+
         message[field.name] = field_value
 
     channel_layer = channels.layers.get_channel_layer()
