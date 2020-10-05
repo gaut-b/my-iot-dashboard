@@ -39,8 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
+    'rest_auth',
+    'rest_auth.registration',
     'api.apps.ApiConfig',
     'pubsub',
 ]
@@ -136,8 +142,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': None
 }
 
+# REST_AUTH CONFIGURATION
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+AUTHENTICATION_BACKENDS = (
+ # Needed to login by username in Django admin, regardless of `allauth`
+ "django.contrib.auth.backends.ModelBackend",
+
+ # `allauth` specific authentication methods, such as login by e-mail
+ "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+# CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
+# ASGI Server configuration needed for websocket
 ASGI_APPLICATION = 'server.routing.application'
 
 CHANNEL_LAYERS = {
