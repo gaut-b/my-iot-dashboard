@@ -1,13 +1,19 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from api.utils.utils import parser
+from django.conf import settings
 from django.utils.timezone import now
+from api.utils.utils import parser
+
+
+class User(AbstractUser):
+    pass
 
 
 class Device(models.Model):
     model = models.CharField(max_length=20, blank=False, null=False)
     deviceId = models.CharField(max_length=10, blank=False, null=False, unique=True)
     firmware = models.CharField(max_length=10, blank=False, null=False)
-    owner = models.ForeignKey('auth.User', related_name='devices', on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='devices', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.deviceId

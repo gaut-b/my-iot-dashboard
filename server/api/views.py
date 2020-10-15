@@ -1,12 +1,13 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from api.models import Device, Data
-from api.serializers import DataSerializer, DeviceSerializer, UserSerializer
+from api.serializers import DataSerializer, DeviceSerializer, LogInSerializer, UserSerializer, NestedUserSerializer
 from rest_framework import generics, permissions
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = get_user_model().objects.all()
+    serializer_class = NestedUserSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
     class Meta:
@@ -26,3 +27,12 @@ class DeviceList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class SignUpView(generics.CreateAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = UserSerializer
+
+
+class LogInView(TokenObtainPairView):
+    serializer_class = LogInSerializer
