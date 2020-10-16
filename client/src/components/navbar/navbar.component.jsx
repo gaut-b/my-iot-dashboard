@@ -12,7 +12,7 @@ const NavbarComponent = () => {
 		  <Navbar bg='light' expand='lg' variant='light'>
 		    <LinkContainer to='/'>
 		      <Navbar.Brand className='logo'>
-		      	<img src={logo} />
+		      	<img src={logo} alt='company logo'/>
 		      </Navbar.Brand>
 		    </LinkContainer>
 		    <Navbar.Toggle />
