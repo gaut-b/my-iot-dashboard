@@ -1,4 +1,5 @@
 import DashboardActionTypes from './dashboard.types.js';
+import ChartTypes from '../../components/chart/utils/chart.types.js';
 import uuid from 'uuid/v4';
 
 const INITIAL_STATE = {}

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -16,23 +16,17 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-const LogIn = ({ isAuthenticated, login }) => {
+const SignUp = ({ isAuthenticated, login }) => {
 
-	const onSubmit = async (values, actions) => {
-		const formData = new FormData();
-		formData.append('username', values.username);
-		formData.append('first_name', values.firstName);
-		formData.append('last_name', values.lastName);
-		formData.append('password1', values.password)
-		formData.append('password2', values.password)
-	}
+	const [isSubmitted, setSubmitted] = useState(false);
 
 	const INITIAL_VALUES = {
 	  username: '',
 	  firstName: '',
 	  lastName: '',
-	  password: '',
-	  passwordConfirmation: '',
+	  email: '',
+	  password1: '',
+	  password2: '',
 	}
 
 	const VALIDATION_SCHEMA = Yup.object({
@@ -46,10 +40,21 @@ const LogIn = ({ isAuthenticated, login }) => {
 			.max(20, 'Must be 20 characters or less')
 			.required('Required'),
 		email: Yup.string().email('Invalid email address').required('Required'),
-		password: Yup.string().required('Password is required'),
-		passwordConfirmation: Yup.string()
-     .oneOf([Yup.ref('password'), null], 'Passwords must match').required('Required')
+		password1: Yup.string().required('Password is required'),
+		password2: Yup.string()
+     .oneOf([Yup.ref('password1'), null], 'Passwords must match').required('Required')
 	});
+
+	const onSubmit = async (values) => {
+		const headers = {"Content-Type": "application/json"};
+		const body = JSON.stringify(values, null, 2);
+		await fetch("http://localhost:8000/signup/", {headers, body, method: "POST"})
+		setSubmitted(true)
+	}
+
+	if (isSubmitted === true) {
+		return <Redirect to='/' />
+	}
 
 	return (
 		<Row>
@@ -63,28 +68,13 @@ const LogIn = ({ isAuthenticated, login }) => {
 					<Card.Body>
 						<Formik
 							initialValues={INITIAL_VALUES}
-							validationSchema={VALIDATION_SCHEMA}
 							onSubmit={onSubmit}
+       				validationSchema={VALIDATION_SCHEMA}
 						>
 							{
-								({ errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue, values }) => (
+								({ errors, handleChange, handleBlur, handleSubmit, values }) => (
 									<React.Fragment>
-		                <Form>
-		                  <Form.Group controlId='username'>
-		                    <Form.Label>Username:</Form.Label>
-		                    <Form.Control
-		                      className={ 'username' in errors ? 'is-invalid' : '' }
-		                      name='username'
-		                      onChange={handleChange}
-		                      onBlur={handleBlur}
-		                      values={values.username}
-		                      required
-		                    />
-		                    {
-		                      'username' in errors &&
-		                      <Form.Control.Feedback type='invalid'>{ errors.username }</Form.Control.Feedback>
-		                    }
-		                  </Form.Group>
+		                <Form onSubmit={handleSubmit} >
 		                  <Form.Group controlId='firstName'>
 		                    <Form.Label>First name:</Form.Label>
 		                    <Form.Control
@@ -92,7 +82,7 @@ const LogIn = ({ isAuthenticated, login }) => {
 		                      name='firstName'
 		                      onChange={handleChange}
 		                      onBlur={handleBlur}
-		                      values={values.firstName}
+		                      value={values.firstName}
 		                    />
 		                    {
 		                      'firstName' in errors &&
@@ -106,45 +96,75 @@ const LogIn = ({ isAuthenticated, login }) => {
 		                      name='lastName'
 		                      onChange={handleChange}
 		                      onBlur={handleBlur}
-		                      values={values.lastName}
+		                      value={values.lastName}
 		                    />
 		                    {
 		                      'lastName' in errors &&
 		                      <Form.Control.Feedback type='invalid'>{ errors.lastName }</Form.Control.Feedback>
 		                    }
 		                  </Form.Group>
-		                  <Form.Group controlId='password'>
+		                  <Form.Group controlId='username'>
+		                    <Form.Label>Username:</Form.Label>
+		                    <Form.Control
+		                      className={ 'username' in errors ? 'is-invalid' : '' }
+		                      name='username'
+		                      onChange={handleChange}
+		                      onBlur={handleBlur}
+		                      value={values.username}
+		                      required
+		                    />
+		                    {
+		                      'username' in errors &&
+		                      <Form.Control.Feedback type='invalid'>{ errors.username }</Form.Control.Feedback>
+		                    }
+		                  </Form.Group>
+		                  <Form.Group controlId='email'>
+		                    <Form.Label>Email:</Form.Label>
+		                    <Form.Control
+		                      className={ 'email' in errors ? 'is-invalid' : '' }
+		                      name='email'
+		                      onChange={handleChange}
+		                      onBlur={handleBlur}
+		                      value={values.email}
+		                      required
+		                    />
+		                    {
+		                      'email' in errors &&
+		                      <Form.Control.Feedback type='invalid'>{ errors.email }</Form.Control.Feedback>
+		                    }
+		                  </Form.Group>
+		                  <Form.Group controlId='password1'>
 		                    <Form.Label>Password:</Form.Label>
 		                    <Form.Control
-		                      className={ 'password' in errors ? 'is-invalid' : '' }
-		                      name='password'
+		                      className={ 'password1' in errors ? 'is-invalid' : '' }
+		                      name='password1'
 		                      onChange={handleChange}
 		                      onBlur={handleBlur}
 		                      type='password'
-		                      value={values.password}
+		                      value={values.password1}
 		                    />
 		                    {
-		                      'password' in errors &&
-		                      <Form.Control.Feedback type='invalid'>{ errors.password }</Form.Control.Feedback>
+		                      'password1' in errors &&
+		                      <Form.Control.Feedback type='invalid'>{ errors.password1 }</Form.Control.Feedback>
 		                    }
 		                  </Form.Group>
-		                  <Form.Group controlId='password'>
+		                  <Form.Group controlId='password2'>
 		                    <Form.Label>Password confirmation:</Form.Label>
 		                    <Form.Control
-		                      className={ 'passwordConfirmation' in errors ? 'is-invalid' : '' }
-		                      name='passwordConfirmation'
+		                      className={ 'password2' in errors ? 'is-invalid' : '' }
+		                      name='password2'
 		                      onChange={handleChange}
 		                      onBlur={handleBlur}
-		                      type='passwordConfirmation'
-		                      value={values.passwordConfirmation}
+		                      type='password'
+		                      value={values.password2}
 		                    />
 		                    {
-		                      'passwordConfirmation' in errors &&
-		                      <Form.Control.Feedback type='invalid'>{ errors.passwordConfirmation }</Form.Control.Feedback>
+		                      'password2' in errors &&
+		                      <Form.Control.Feedback type='invalid'>{ errors.password2 }</Form.Control.Feedback>
 		                    }
 		                  </Form.Group>
 		                  <Col className='text-center'>
-		                  	<Button type='submit' variant='primary'>Sign up</Button>
+		                  	<Button type="submit" variant='primary'>Sign up</Button>
 		                  </Col>
 		                </Form>
 									</React.Fragment>
@@ -171,4 +191,4 @@ const mapDispatchToProps = dispatch => ({
 	login: (email, password) => dispatch(login(email, password)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

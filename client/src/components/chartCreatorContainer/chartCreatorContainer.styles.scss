@@ -1,0 +1,15 @@
+.chartCreatorContainer {
+	margin: 50px;
+	display: flex;
+	justify-content: space-around;
+}
+
+.nav-tabs {
+	a {
+		width: 20rem;
+		svg {
+			display: block;
+			margin: auto;
+		}
+	}
+}
