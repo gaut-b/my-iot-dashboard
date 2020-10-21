@@ -1,12 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { initData, addLastData } from '../../redux/data/data.actions';
 
 import ChartContainer from '../../components/chartContainer/chartContainer.component';
 import ChartCreatorContainer from '../../components/chartCreatorContainer/chartCreatorContainer.component';
 
+import Button from 'react-bootstrap/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+
+import './dashboardPage.styles.scss';
 
 const DashboardPage = ({ data, dashboard, initData, addLastData }) => {
+
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
 
 	const ws = useRef(null);
 
@@ -48,20 +55,23 @@ const DashboardPage = ({ data, dashboard, initData, addLastData }) => {
   }, [dashboard]);
 
     return(
-        <div>
-            <ChartCreatorContainer />
-            	{
-	            	(!Object.keys(dashboard).length) ? null :
-	            	<React.Fragment>
-	            		{
-	            			(!data.data.length) ? <div className="loader"></div> :
-		                <div className = 'homepage-container__content' >
-		                    {Object.keys(dashboard).map((key, index) => <ChartContainer key={index} data={data.data} chartInfos={dashboard[key]} />)}
-		                </div>
-		              }
-	              </React.Fragment>
-            	}
-        </div>
+      <div className='dashboardContainer h-100'>
+          <ChartCreatorContainer isSidebarVisible={isSidebarVisible} toggleSidebar={setSidebarVisible} />
+          	{
+            	(!Object.keys(dashboard).length) ? null :
+            	<React.Fragment>
+            		{
+            			(!data.data.length) ? <div className="loader"></div> :
+                  <div className = 'homepage-container__content' >
+                      {Object.keys(dashboard).map((key, index) => <ChartContainer key={index} data={data.data} chartInfos={dashboard[key]} />)}
+                  </div>
+                }
+              </React.Fragment>
+          	}
+            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+              <FontAwesomeIcon icon={faPlusCircle} />
+            </Button>
+      </div>
     );
 };
 
