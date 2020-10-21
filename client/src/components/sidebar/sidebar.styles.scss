@@ -1,0 +1,75 @@
+$sidebar-width: 500px;
+
+.sidebar {
+	width: $sidebar-width;
+	background: #354052;
+	color: #adb5bd;
+	margin-right: -$sidebar-width;
+	transition: all 0.5s;
+	height: 100%;
+	float: right;
+
+	&.is-open {
+		margin-right: 0px;
+		transition: 0.5s;
+	}
+
+	ul p {
+		color: #fff;
+		padding: 10px;
+	}
+}
+
+.sidebar-header {
+	background: #313b4c;
+	color: #adb5bd;
+
+	h3 {
+		color: #fff;
+		padding: 1em;
+	}
+}
+
+.collapse.show, .collapsing {
+  background: #313b4c;
+}
+
+.nav-item {
+	/*color: #ced4da;*/
+	color: #adb5bd;
+	font-weight: 300;
+	.open {
+		color: #e9ecef;
+		background: #313b4c;
+	}
+
+	.active {
+		color: #e9ecef;
+		background: #2d3646 !important;
+	}
+
+	&hover {
+		background: #313b4c;
+		color: #fff;
+		transition: .2s;
+	}
+
+	.svg-inline--fa {
+		color: inherit;
+	}
+}
+
+li a.dropdown-toggle::after {
+  display: inline-flex;
+  position: relative;
+  left: 60%;
+  top: 10%
+}
+
+.sidebar-header > button {
+  position: relative;
+  float: right;
+  margin: 0.5em;
+  font-size: 2rem;
+  cursor: pointer;
+}
