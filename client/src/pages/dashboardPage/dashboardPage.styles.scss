@@ -2,13 +2,17 @@
 
 	overflow-x: hidden;
 
-	& > button {
+	.editPanel {
 		position: absolute;
 		bottom: 50px;
 		right: 50px;
-		width: 20rem;
-		font-size: 3rem;
-		display: hidden;
+		width: 15rem;
+
+		& > button {
+			width: 20rem;
+			font-size: 3rem;
+			display: block;
+		}
 	}
 
 }

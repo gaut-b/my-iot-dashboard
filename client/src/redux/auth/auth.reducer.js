@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode'
 
 let access = null;
 let refresh = null;
+
 if (localStorage.getItem('access')) {
 	access = {
 		token: localStorage.getItem('access'),
@@ -20,7 +21,7 @@ if (localStorage.getItem('refresh')) {
 const INITIAL_STATE = {
 	access,
 	refresh,
-	isAuthenticated: false,
+	isAuthenticated: true, // Set to true for development purpose. Need to be false in production
 	isRefreshingToken: false,
 	isLoading: false,
 	errors: {},

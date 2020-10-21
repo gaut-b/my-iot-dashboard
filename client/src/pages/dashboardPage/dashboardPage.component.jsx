@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { initData, addLastData } from '../../redux/data/data.actions';
+import { moveChart } from '../../redux/dashboard/dashboard.actions';
 
 import ChartContainer from '../../components/chartContainer/chartContainer.component';
 import ChartCreatorContainer from '../../components/chartCreatorContainer/chartCreatorContainer.component';
 
+import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import './dashboardPage.styles.scss';
 
-const DashboardPage = ({ data, dashboard, initData, addLastData }) => {
+const DashboardPage = ({ data, dashboard, initData, addLastData, moveChart }) => {
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -54,25 +58,45 @@ const DashboardPage = ({ data, dashboard, initData, addLastData }) => {
 
   }, [dashboard]);
 
-    return(
-      <div className='dashboardContainer h-100'>
-          <ChartCreatorContainer isSidebarVisible={isSidebarVisible} toggleSidebar={setSidebarVisible} />
-          	{
-            	(!Object.keys(dashboard).length) ? null :
-            	<React.Fragment>
-            		{
-            			(!data.data.length) ? <div className="loader"></div> :
-                  <div className = 'homepage-container__content' >
-                      {Object.keys(dashboard).map((key, index) => <ChartContainer key={index} data={data.data} chartInfos={dashboard[key]} />)}
-                  </div>
-                }
-              </React.Fragment>
-          	}
-            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
-              <FontAwesomeIcon icon={faPlusCircle} />
-            </Button>
-      </div>
-    );
+  const onDragEnd = ({source, destination}) => {
+    if (source && destination) {
+      moveChart(source, destination)
+    }
+  };
+
+  return(
+    <div className='dashboardContainer h-100'>
+      <ChartCreatorContainer isSidebarVisible={isSidebarVisible} toggleSidebar={setSidebarVisible} />
+    	<DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="dashboard">
+          {(provided) => (
+            <Container {...provided.droppableProps} ref={provided.innerRef} className="dashboardContainer__content" fluid>
+              {
+                (!Object.keys(dashboard).length) ? null :
+                <React.Fragment>
+                  {
+                    (!data.data.length) ? <div className="loader"></div> :
+                    <React.Fragment>
+                      {dashboard.map((chart, index) => <ChartContainer key={chart.id} data={data.data} index={index} chartInfos={chart} />)}
+                    </React.Fragment>
+                  }
+                  {provided.placeholder}
+                </React.Fragment>
+              }
+              <Container className="editPanel">
+                <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+                  <FontAwesomeIcon icon={faEdit} />
+                </Button>
+                <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+                  <FontAwesomeIcon icon={faPlusCircle} />
+                </Button>
+              </Container>
+            </Container>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
+  );
 };
 
 const mapStateToProps = (state) => ({
@@ -83,6 +107,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
     initData: (data) => dispatch(initData(data)),
     addLastData: (data) => dispatch(addLastData(data)),
+    moveChart: (source, destination) => dispatch(moveChart(source, destination)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
