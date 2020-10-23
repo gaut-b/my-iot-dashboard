@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { createGraph } from '../../redux/dashboard/dashboard.actions';
+import { createChart } from '../../redux/dashboard/dashboard.actions';
 import ChartTypes from '../chart/utils/chart.types';
 import ACCESSORS from '../chart/utils/accessors';
 
@@ -26,10 +26,10 @@ const INITIAL_VALUES = {
 		maxColor: '#4834d4',
 }
 
-const GaugeForm = ({ createGraph, history }) => {
+const GaugeForm = ({ createChart, history }) => {
 
 	const handleSubmit = (values) => {
-		createGraph(values);
+		createChart(values);
 	}
 
 	const fields = Object.keys(ACCESSORS).map( (key) => {
@@ -169,7 +169,7 @@ const GaugeForm = ({ createGraph, history }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	createGraph: (graphData) => dispatch(createGraph(graphData)),
+	createChart: (graphData) => dispatch(createChart(graphData)),
 })
 
 export default connect(null, mapDispatchToProps)(GaugeForm);

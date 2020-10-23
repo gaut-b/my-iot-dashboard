@@ -1,14 +1,19 @@
 import React from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+import { connect } from 'react-redux';
+import { deleteChart } from '../../redux/dashboard/dashboard.actions';
 import ChartTypes from '../chart/utils/chart.types.js';
 import LineChart from '../lineChart/lineChart.component';
 import Gauge from '../gaugeChart/gaugeChart.component';
 
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import './chartContainer.styles.scss';
 
-const ChartContainer = ({ chartInfos, index, data }) => {
+const ChartContainer = ({ chartInfos, data, chartIndex, deleteChart }) => {
 
 	const graph = (chartInfos) => {
 		switch (chartInfos.type) {
@@ -22,14 +27,21 @@ const ChartContainer = ({ chartInfos, index, data }) => {
 	}
 
 	return (
-		<Draggable draggableId={chartInfos.id} index={index} >
-			{ (provided) => (
-				<Card {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className="ChartContainer">
-					{ graph(chartInfos) }
-				</Card>
-			)}
-		</Draggable>
+		<Card className="ChartContainer">
+			<Card.Header>
+				<Button variant='link' onClick={() => deleteChart(chartIndex)}>
+					<FontAwesomeIcon icon={faTrashAlt} pull='right' size='xs' />
+				</Button>
+			</Card.Header>
+			<Card.Body>
+				{ graph(chartInfos) }
+			</Card.Body>
+		</Card>
 	);
 };
 
-export default ChartContainer;
+const mapDispatchToProps = dispatch => ({
+	deleteChart: (chartIndex) => dispatch(deleteChart(chartIndex)),
+});
+
+export default connect(null, mapDispatchToProps)(ChartContainer);

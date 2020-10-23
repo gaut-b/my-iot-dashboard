@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { withRouter } from 'react-router-dom';
-import { createGraph } from '../../redux/dashboard/dashboard.actions';
+import { createChart } from '../../redux/dashboard/dashboard.actions';
 import ChartTypes from '../chart/utils/chart.types';
 import ACCESSORS from '../chart/utils/accessors';
 
@@ -22,11 +22,11 @@ const INITIAL_STATE = {
 	yLabel: '',
 }
 
-const LineChartForm = ({ createGraph, history }) => {
+const LineChartForm = ({ createChart, history }) => {
 
 
 	const handleSubmit = (values) => {
-		createGraph(values);
+		createChart(values);
 	}
 
 	const fields = Object.keys(ACCESSORS).map( (key) => {
@@ -124,7 +124,7 @@ const LineChartForm = ({ createGraph, history }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	createGraph: (graphData) => dispatch(createGraph(graphData)),
+	createChart: (graphData) => dispatch(createChart(graphData)),
 })
 
 export default connect(null, mapDispatchToProps)(withRouter(LineChartForm));

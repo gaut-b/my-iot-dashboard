@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { initData, addLastData } from '../../redux/data/data.actions';
 import { moveChart } from '../../redux/dashboard/dashboard.actions';
@@ -14,6 +15,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import './dashboardPage.styles.scss';
+// Import needed for react-grid-layout
+import '../../../node_modules/react-grid-layout/css/styles.css';
+import '../../../node_modules/react-resizable/css/styles.css';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DashboardPage = ({ data, dashboard, initData, addLastData, moveChart }) => {
 
@@ -58,43 +64,40 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, moveChart }) =>
 
   }, [dashboard]);
 
-  const onDragEnd = ({source, destination}) => {
-    if (source && destination) {
-      moveChart(source, destination)
-    }
-  };
+  const handleDrop = (elem) => console.log(elem)
+
+  const layout = (dashboard, data) => {
+     if (!Object.keys(dashboard).length) {
+      return null;
+    } else if (!data.data.length) {
+      return <div className="loader"></div>
+    } else {
+      return dashboard.map((chart, index) =>
+        <div key={chart.id} data-grid={chart.dataGrid}>
+          <ChartContainer key={index} chartIndex={index} data={data.data} chartInfos={chart} />
+        </div>
+    )}
+  }
 
   return(
     <div className='dashboardContainer h-100'>
       <ChartCreatorContainer isSidebarVisible={isSidebarVisible} toggleSidebar={setSidebarVisible} />
-    	<DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="dashboard">
-          {(provided) => (
-            <Container {...provided.droppableProps} ref={provided.innerRef} className="dashboardContainer__content" fluid>
-              {
-                (!Object.keys(dashboard).length) ? null :
-                <React.Fragment>
-                  {
-                    (!data.data.length) ? <div className="loader"></div> :
-                    <React.Fragment>
-                      {dashboard.map((chart, index) => <ChartContainer key={chart.id} data={data.data} index={index} chartInfos={chart} />)}
-                    </React.Fragment>
-                  }
-                  {provided.placeholder}
-                </React.Fragment>
-              }
-              <Container className="editPanel">
-                <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
-                  <FontAwesomeIcon icon={faEdit} />
-                </Button>
-                <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
-                  <FontAwesomeIcon icon={faPlusCircle} />
-                </Button>
-              </Container>
-            </Container>
-          )}
-        </Droppable>
-      </DragDropContext>
+          <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{lg: 1200}}
+            cols={{lg: 4}}
+            onDragStop={console.log}
+          >
+          {layout(dashboard, data)}
+          </ResponsiveGridLayout>
+          <Container className="editPanel">
+            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+              <FontAwesomeIcon icon={faEdit} />
+            </Button>
+            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+              <FontAwesomeIcon icon={faPlusCircle} />
+            </Button>
+          </Container>
     </div>
   );
 };
