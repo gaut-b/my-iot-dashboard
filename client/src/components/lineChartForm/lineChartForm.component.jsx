@@ -15,6 +15,13 @@ import Row from 'react-bootstrap/Row';
 import './lineChartForm.styles.scss';
 
 const INITIAL_STATE = {
+	dataGrid: {
+		x: 0,
+		y: 0,
+		w: 4,
+		h: 2,
+		minH: 2,
+	},
 	type: ChartTypes.LINE_CHART,
 	xData: '',
 	xLabel: '',

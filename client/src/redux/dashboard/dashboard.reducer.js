@@ -23,34 +23,37 @@ const INITIAL_STATE = [];
 
 const dashboardReducer = (state = INITIAL_STATE, action) => {
 	switch (action.type) {
-		case DashboardActionTypes.CREATE_CHART:
+		case DashboardActionTypes.CREATE_CHART: {
 			const id = uuid();
 			const newChart = {
 					id: id,
-					dataGrid: {
-						i: id,
-						x: 0,
-						y: 0,
-						w: 2,
-						h: 2,
-					},
 					...action.payload,
 			};
+			console.log([...state, newChart])
 			return [...state, newChart];
+		};
 
-		case DashboardActionTypes.DELETE_CHART:
+		case DashboardActionTypes.DELETE_CHART: {
 			const chartIndex = action.payload;
-			console.log([...state].splice(chartIndex, 1))
-			return [...state].splice(chartIndex, 1);
+			const newState = [...state];
+			newState.splice(chartIndex, 1);
 
-		case DashboardActionTypes.MOVE_CHART:
-			const { source, destination } = action.payload;
+			return newState
+		};
 
-			let newState = [...state];
-			const [removed] = newState.splice(source.index, 1);
-			newState.splice(destination.index, 0, removed);
+		case DashboardActionTypes.UPDATE_LAYOUT: {
+			const newLayout = action.payload;
+			const newState = [...state];
+
+			newLayout.map((chartLayout) => {
+				const chartIndex = state.findIndex(chart => chart.id === chartLayout.i);
+				if (chartIndex !== -1) {
+					newState[chartIndex].dataGrid = chartLayout;
+				}
+			});
 
 			return newState;
+		};
 
 		default:
 			return state;

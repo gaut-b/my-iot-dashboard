@@ -13,7 +13,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import './chartContainer.styles.scss';
 
-const ChartContainer = ({ chartInfos, data, chartIndex, deleteChart }) => {
+const ChartContainer = ({ isEditing, chartInfos, data, chartIndex, deleteChart }) => {
 
 	const graph = (chartInfos) => {
 		switch (chartInfos.type) {
@@ -28,11 +28,13 @@ const ChartContainer = ({ chartInfos, data, chartIndex, deleteChart }) => {
 
 	return (
 		<Card className="ChartContainer">
+		{(isEditing) ?
 			<Card.Header>
 				<Button variant='link' onClick={() => deleteChart(chartIndex)}>
 					<FontAwesomeIcon icon={faTrashAlt} pull='right' size='xs' />
 				</Button>
-			</Card.Header>
+			</Card.Header> : null
+		}
 			<Card.Body>
 				{ graph(chartInfos) }
 			</Card.Body>

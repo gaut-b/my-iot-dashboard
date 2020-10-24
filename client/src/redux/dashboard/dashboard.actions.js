@@ -14,3 +14,8 @@ export const moveChart = (source, destination) => ({
 	type: DashboardActionTypes.MOVE_CHART,
 	payload: {source, destination},
 });
+
+export const updateLayout = (newLayout) => ({
+	type: DashboardActionTypes.UPDATE_LAYOUT,
+	payload: newLayout,
+});

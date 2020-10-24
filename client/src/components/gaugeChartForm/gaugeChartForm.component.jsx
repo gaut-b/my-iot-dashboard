@@ -16,14 +16,22 @@ import Row from 'react-bootstrap/Row';
 import './gaugeChartForm.styles.scss';
 
 const INITIAL_VALUES = {
-		type: ChartTypes.GAUGE,
-		observable: '',
-		label: '',
-		units: '',
-		min: 0,
-		minColor: '#dbdbe7',
-		max: 100,
-		maxColor: '#4834d4',
+	dataGrid: {
+		x: 0,
+		y: 0,
+		w: 1,
+		h: 2,
+		minW: 1,
+		minH: 2,
+	},
+	type: ChartTypes.GAUGE,
+	observable: '',
+	label: '',
+	units: '',
+	min: 0,
+	minColor: '#dbdbe7',
+	max: 100,
+	maxColor: '#4834d4',
 }
 
 const GaugeForm = ({ createChart, history }) => {

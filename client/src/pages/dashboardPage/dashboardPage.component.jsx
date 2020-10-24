@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { initData, addLastData } from '../../redux/data/data.actions';
-import { moveChart } from '../../redux/dashboard/dashboard.actions';
+import { updateLayout } from '../../redux/dashboard/dashboard.actions';
 
 import ChartContainer from '../../components/chartContainer/chartContainer.component';
 import ChartCreatorContainer from '../../components/chartCreatorContainer/chartCreatorContainer.component';
@@ -12,7 +11,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 
 import './dashboardPage.styles.scss';
 // Import needed for react-grid-layout
@@ -21,9 +20,13 @@ import '../../../node_modules/react-resizable/css/styles.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const DashboardPage = ({ data, dashboard, initData, addLastData, moveChart }) => {
+const DashboardPage = ({ data, dashboard, initData, addLastData, updateLayout }) => {
 
+  // The isUserAdmin will be stored in user state when implemented
+  const [isUserAdmin, setUserAdmin] = useState(true);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentLayout, setCurrentLayout] = useState({});
 
 	const ws = useRef(null);
 
@@ -64,17 +67,22 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, moveChart }) =>
 
   }, [dashboard]);
 
-  const handleDrop = (elem) => console.log(elem)
+  const finishEditing = () => {
+    setIsEditing(false);
+    updateLayout(currentLayout);
+  }
+
+  const onLayoutChange = (layout) => setCurrentLayout(layout);
 
   const layout = (dashboard, data) => {
-     if (!Object.keys(dashboard).length) {
+    if (!Object.keys(dashboard).length) {
       return null;
     } else if (!data.data.length) {
       return <div className="loader"></div>
     } else {
       return dashboard.map((chart, index) =>
         <div key={chart.id} data-grid={chart.dataGrid}>
-          <ChartContainer key={index} chartIndex={index} data={data.data} chartInfos={chart} />
+          <ChartContainer key={index} isEditing={isEditing} chartIndex={index} data={data.data} chartInfos={chart} />
         </div>
     )}
   }
@@ -82,35 +90,42 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, moveChart }) =>
   return(
     <div className='dashboardContainer h-100'>
       <ChartCreatorContainer isSidebarVisible={isSidebarVisible} toggleSidebar={setSidebarVisible} />
-          <ResponsiveGridLayout
-            className="layout"
-            breakpoints={{lg: 1200}}
-            cols={{lg: 4}}
-            onDragStop={console.log}
-          >
+        <ResponsiveGridLayout
+          className="layout"
+          breakpoints={{lg: 1200}}
+          cols={{lg: 4}}
+          onLayoutChange={onLayoutChange}
+          isResizable={isEditing}
+          isDraggable={isEditing}
+        >
           {layout(dashboard, data)}
-          </ResponsiveGridLayout>
-          <Container className="editPanel">
-            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+        </ResponsiveGridLayout>
+        <Container className="editPanel" hidden={!isUserAdmin}>
+          { (isEditing) ?
+            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={finishEditing}>
+              <FontAwesomeIcon icon={faSave} />
+            </Button> :
+            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setIsEditing(true)}>
               <FontAwesomeIcon icon={faEdit} />
             </Button>
-            <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
-              <FontAwesomeIcon icon={faPlusCircle} />
-            </Button>
-          </Container>
+          }
+          <Button hidden={isSidebarVisible} size="sm" variant='link' onClick={() => setSidebarVisible(!isSidebarVisible)}>
+            <FontAwesomeIcon icon={faPlusCircle} />
+          </Button>
+        </Container>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-    data: state.data,
-    dashboard: state.dashboard,
+  data: state.data,
+  dashboard: state.dashboard,
 })
 
 const mapDispatchToProps = dispatch => ({
-    initData: (data) => dispatch(initData(data)),
-    addLastData: (data) => dispatch(addLastData(data)),
-    moveChart: (source, destination) => dispatch(moveChart(source, destination)),
+  initData: (data) => dispatch(initData(data)),
+  addLastData: (data) => dispatch(addLastData(data)),
+  updateLayout: (layout) => dispatch(updateLayout(layout)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

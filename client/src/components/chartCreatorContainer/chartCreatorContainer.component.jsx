@@ -20,20 +20,19 @@ const ChartCreatorContainer = ({ isSidebarVisible, toggleSidebar }) => {
 
 	return(
 		<Sidebar isSidebarVisible={isSidebarVisible} toggleSidebar={toggleSidebar} >
-
-				<Tabs defaultActiveKey="Line chart" id="uncontrolled-tab-example">
-				  <Tab eventKey="Line chart" title={LineChartIcon}>
-				  	<Container fluid>
-				  		<LineChartForm />
-				    </Container>
-				  </Tab>
-				  <Tab eventKey="Gauge" title={GaugeIcon}>
-				    <GaugeChartForm />
-				  </Tab>
-				  <Tab eventKey="Bar chart" title={BarChartIcon} disabled>
-				    {null}
-				  </Tab>
-				</Tabs>
+			<Tabs defaultActiveKey="Line chart" id="uncontrolled-tab-example">
+			  <Tab eventKey="Line chart" title={LineChartIcon}>
+			  	<Container fluid>
+			  		<LineChartForm />
+			    </Container>
+			  </Tab>
+			  <Tab eventKey="Gauge" title={GaugeIcon}>
+			    <GaugeChartForm />
+			  </Tab>
+			  <Tab eventKey="Bar chart" title={BarChartIcon} disabled>
+			    {null}
+			  </Tab>
+			</Tabs>
 		</Sidebar>
 	);
 };
