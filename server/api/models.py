@@ -3,13 +3,18 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import now
 from api.utils.utils import parser
+import django.db.models.options as options
 
+options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('in_db',)
 
 class User(AbstractUser):
     pass
 
 
 class Device(models.Model):
+    class Meta:
+        in_db = 'data'
+
     model = models.CharField(max_length=20, blank=False, null=False)
     deviceId = models.CharField(max_length=10, blank=False, null=False, unique=True)
     firmware = models.CharField(max_length=10, blank=False, null=False)
@@ -20,6 +25,9 @@ class Device(models.Model):
 
 
 class Data(models.Model):
+    class Meta:
+        in_db = 'data'
+
     deviceId = models.ForeignKey('Device', to_field='deviceId', on_delete=models.CASCADE)
     rawData = models.CharField(max_length=24, blank=False, null=False)
     temp = models.DecimalField(max_digits=4, decimal_places=2, default=0)

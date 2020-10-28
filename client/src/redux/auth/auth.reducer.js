@@ -21,7 +21,7 @@ if (localStorage.getItem('refresh')) {
 const INITIAL_STATE = {
 	access,
 	refresh,
-	isAuthenticated: true, // Set to true for development purpose. Need to be false in production
+	isAuthenticated: false, // Set to true for development purpose. Need to be false in production
 	isRefreshingToken: false,
 	isLoading: false,
 	errors: {},

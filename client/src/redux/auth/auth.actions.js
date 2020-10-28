@@ -59,7 +59,7 @@ export const loadUser = () => {
 export const login = (email, password) => {
 	return (dispatch, getState) => {
 		let headers = {"Content-Type": "application/json"};
-		let body = JSON.stringify({username:'test2', password:'test2'})
+		let body = JSON.stringify({username:'test', password:'test'})
 
 		return fetch("http://localhost:8000/login/", {headers, body, method: "POST"})
 			.then(res => {
