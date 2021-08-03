@@ -41,7 +41,7 @@ const DashboardPage = () => {
           "Content-Type": "application/json",
       };
 
-      const res = await fetch('http://iot-backend.gautier-bayle.fr/data/', headers);
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}data/` , headers);
       const jsonRes = await res.json();
       try {
         dispatch(initData(jsonRes))
@@ -56,7 +56,7 @@ const DashboardPage = () => {
     	}
 
     	if (!ws.current) {
-		    ws.current = new WebSocket('ws://iot-backend.gautier-bayle.fr/ws/pubsub/1B290A4/');
+		    ws.current = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_URL}pubsub/1B290A4/`);
 		    ws.current.onopen = () => console.log('ws opened');
 		    ws.current.onclose = () => console.log('ws closed')
 		    ws.current.onmessage = (e) => {
