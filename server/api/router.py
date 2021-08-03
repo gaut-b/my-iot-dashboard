@@ -17,10 +17,8 @@ class ModelMetaRouter(object):
             return 'default'
 
     def allow_relation(self, obj1, obj2, **hints):
-        # only allow relations within a single database
-        if getattr(obj1._meta, 'in_db', None) == getattr(obj2._meta, 'in_db', None):
-            return True
-        return None
+        # Relationships are allowed since devices (data) are related to user (default)
+        return True
 
     def allow_syncdb(self, db, model):
         if db == getattr(model._meta, 'in_db', 'default'):
