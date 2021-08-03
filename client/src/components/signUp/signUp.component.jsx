@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link, Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -16,34 +16,37 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-const SignUp = ({ isAuthenticated, login }) => {
+const INITIAL_VALUES = {
+	username: '',
+	firstName: '',
+	lastName: '',
+	email: '',
+	password1: '',
+	password2: '',
+};
+
+const VALIDATION_SCHEMA = Yup.object({
+	username: Yup.string()
+		.max(15, 'Must be 15 characters or less')
+		.required('Required'),
+	firstName: Yup.string()
+		.max(15, 'Must be 15 characters or less')
+		.required('Required'),
+	lastName: Yup.string()
+		.max(20, 'Must be 20 characters or less')
+		.required('Required'),
+	email: Yup.string().email('Invalid email address').required('Required'),
+	password1: Yup.string().required('Password is required'),
+	password2: Yup.string()
+	 .oneOf([Yup.ref('password1'), null], 'Passwords must match').required('Required')
+});
+
+const SignUp = () => {
 
 	const [isSubmitted, setSubmitted] = useState(false);
-
-	const INITIAL_VALUES = {
-	  username: '',
-	  firstName: '',
-	  lastName: '',
-	  email: '',
-	  password1: '',
-	  password2: '',
-	}
-
-	const VALIDATION_SCHEMA = Yup.object({
-		username: Yup.string()
-			.max(15, 'Must be 15 characters or less')
-			.required('Required'),
-		firstName: Yup.string()
-			.max(15, 'Must be 15 characters or less')
-			.required('Required'),
-		lastName: Yup.string()
-			.max(20, 'Must be 20 characters or less')
-			.required('Required'),
-		email: Yup.string().email('Invalid email address').required('Required'),
-		password1: Yup.string().required('Password is required'),
-		password2: Yup.string()
-     .oneOf([Yup.ref('password1'), null], 'Passwords must match').required('Required')
-	});
+	const isAuthenticated = useSelector(selectIsAuthenticated);
+	const dispatch = useDispatch();
+	const login = (email, password) => dispatch(login(email, password));
 
 	const onSubmit = async (values) => {
 		const headers = {"Content-Type": "application/json"};
@@ -69,7 +72,7 @@ const SignUp = ({ isAuthenticated, login }) => {
 						<Formik
 							initialValues={INITIAL_VALUES}
 							onSubmit={onSubmit}
-       				validationSchema={VALIDATION_SCHEMA}
+							validationSchema={VALIDATION_SCHEMA}
 						>
 							{
 								({ errors, handleChange, handleBlur, handleSubmit, values }) => (
@@ -183,12 +186,4 @@ const SignUp = ({ isAuthenticated, login }) => {
 	);
 };
 
-const mapStateToProps = createStructuredSelector({
-	isAuthenticated: selectIsAuthenticated,
-})
-
-const mapDispatchToProps = dispatch => ({
-	login: (email, password) => dispatch(login(email, password)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default SignUp;

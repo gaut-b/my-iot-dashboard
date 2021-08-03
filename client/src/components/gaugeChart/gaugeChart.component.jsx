@@ -123,7 +123,7 @@ const Gauge = ({ data, chartInfos }) => {
       </div>
       {!!label && (
         <div style={{
-          color: "white",
+          // color: "white",
           marginTop: "0.6em",
           fontSize: "1.3em",
           lineHeight: "1.3em",
@@ -134,7 +134,7 @@ const Gauge = ({ data, chartInfos }) => {
       )}
       {!!units && (
         <div style={{
-          color: "white",
+          // color: "white",
           lineHeight: "1.3em",
           fontWeight: "300",
         }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { createChart } from '../../redux/dashboard/dashboard.actions';
@@ -29,12 +29,11 @@ const INITIAL_STATE = {
 	yLabel: '',
 }
 
-const LineChartForm = ({ createChart, history }) => {
+const LineChartForm = ({ history }) => {
 
+	const dispatch = useDispatch();
 
-	const handleSubmit = (values) => {
-		createChart(values);
-	}
+	const handleSubmit = (graphData) => dispatch(createChart(graphData)),
 
 	const fields = Object.keys(ACCESSORS).map( (key) => {
 		return { text: key, value: key}
@@ -130,8 +129,4 @@ const LineChartForm = ({ createChart, history }) => {
 	);
 };
 
-const mapDispatchToProps = dispatch => ({
-	createChart: (graphData) => dispatch(createChart(graphData)),
-})
-
-export default connect(null, mapDispatchToProps)(withRouter(LineChartForm));
+export default LineChartForm;

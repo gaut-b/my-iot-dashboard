@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { initData, addLastData } from '../../redux/data/data.actions';
 import { updateLayout } from '../../redux/dashboard/dashboard.actions';
@@ -20,7 +20,11 @@ import '../../../node_modules/react-resizable/css/styles.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const DashboardPage = ({ data, dashboard, initData, addLastData, updateLayout }) => {
+const DashboardPage = () => {
+  console.log(process.env)
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.data);
+  const dashboard = useSelector(state => state.dashboard);
 
   // The isUserAdmin will be stored in user state when implemented
   const [isUserAdmin, setUserAdmin] = useState(true);
@@ -38,10 +42,12 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, updateLayout })
       };
 
       const res = await fetch('http://iot-backend.gautier-bayle.fr/data/', headers);
-      res
-        .json()
-        .then(res => initData(res))
-        .catch(err => console.log(err));
+      const jsonRes = await res.json();
+      try {
+        dispatch(initData(jsonRes))
+      } catch (err) {
+        console.log(err)
+      }
     }
 
     if (Object.keys(dashboard).length) {
@@ -55,7 +61,7 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, updateLayout })
 		    ws.current.onclose = () => console.log('ws closed')
 		    ws.current.onmessage = (e) => {
 		        const message = JSON.parse(e.data);
-		        addLastData(message.message)
+		        dispatch(addLastData(message.message))
 		    }
 
 		    return () => {
@@ -69,7 +75,7 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, updateLayout })
 
   const finishEditing = () => {
     setIsEditing(false);
-    updateLayout(currentLayout);
+    dispatch(updateLayout(currentLayout));
   }
 
   const onLayoutChange = (layout) => setCurrentLayout(layout);
@@ -117,15 +123,5 @@ const DashboardPage = ({ data, dashboard, initData, addLastData, updateLayout })
   );
 };
 
-const mapStateToProps = (state) => ({
-  data: state.data,
-  dashboard: state.dashboard,
-})
 
-const mapDispatchToProps = dispatch => ({
-  initData: (data) => dispatch(initData(data)),
-  addLastData: (data) => dispatch(addLastData(data)),
-  updateLayout: (layout) => dispatch(updateLayout(layout)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
+export default DashboardPage;
