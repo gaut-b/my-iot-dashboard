@@ -33,7 +33,7 @@ const LineChartForm = ({ history }) => {
 
 	const dispatch = useDispatch();
 
-	const handleSubmit = (graphData) => dispatch(createChart(graphData)),
+	const handleSubmit = (graphData) => dispatch(createChart(graphData));
 
 	const fields = Object.keys(ACCESSORS).map( (key) => {
 		return { text: key, value: key}
