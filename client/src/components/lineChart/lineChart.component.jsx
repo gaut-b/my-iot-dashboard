@@ -33,9 +33,9 @@ const LineChart = ({ data, chartInfos }) => {
 
 
     const yScale = d3.scaleLinear()
-            .domain(d3.extent(data, yAccessor))
-            .range([dimensions.boundedHeight, 0])
-            .nice()
+			.domain(d3.extent(data, yAccessor))
+			.range([dimensions.boundedHeight, 0])
+			.nice()
 
     const xAccessorScaled = d => xScale(xAccessor(d))
     const yAccessorScaled = d => yScale(yAccessor(d))
@@ -46,44 +46,43 @@ const LineChart = ({ data, chartInfos }) => {
     // if (xData === 'time') formatTick.disabled = true;
 
     return (
-    	<div className = "lineGraph" ref={ref}>
+    	<div className="lineGraph" ref={ref} style={{height: "100%"}}>
     		<Chart dimensions={dimensions} >
-
-                <Line
-                  data={data}
-                  dimensions = {dimensions}
-                  xAccessor = {xAccessorScaled}
-                  yAccessor = {yAccessorScaled}
-                  y0Accessor = {y0AccessorScaled}
-                />
-                <Circles
-                    data = {data}
-                    keyAccessor = {keyAccessor}
-                    xAccessor = {xAccessorScaled}
-                    yAccessor = {yAccessorScaled}
-                />
-                {
-                  (xData === 'time')
-                  ? <Axis
-                      dimension="x"
-                      label = {chartInfos.xLabel}
-                      dimensions = {dimensions}
-                      scale={xScale}
-                      formatTick={formatDate}
-                    />
-                  : <Axis
-                      dimension="x"
-                      label = {chartInfos.xLabel}
-                      dimensions = {dimensions}
-                      scale={xScale}
-                    />
-                }
-                <Axis
-                  dimension="y"
-                  label = {chartInfos.yLabel}
-                  dimensions = {dimensions}
-                  scale={yScale}
-                />
+					<Line
+						data={data}
+						dimensions = {dimensions}
+						xAccessor = {xAccessorScaled}
+						yAccessor = {yAccessorScaled}
+						y0Accessor = {y0AccessorScaled}
+					/>
+					<Circles
+							data = {data}
+							keyAccessor = {keyAccessor}
+							xAccessor = {xAccessorScaled}
+							yAccessor = {yAccessorScaled}
+					/>
+					{
+						(xData === 'time')
+							? <Axis
+									dimension="x"
+									label = {chartInfos.xLabel}
+									dimensions = {dimensions}
+									scale={xScale}
+									formatTick={formatDate}
+								/>
+							: <Axis
+									dimension="x"
+									label = {chartInfos.xLabel}
+									dimensions = {dimensions}
+									scale={xScale}
+								/>
+					}
+					<Axis
+						dimension="y"
+						label = {chartInfos.yLabel}
+						dimensions = {dimensions}
+						scale={yScale}
+					/>
     		</Chart>
     	</div>
     );

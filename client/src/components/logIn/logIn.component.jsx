@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -16,20 +15,23 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-const LogIn = ({ isAuthenticated, login }) => {
+const INITIAL_VALUES = {username: '', password: ''};
 
-	const INITIAL_VALUES = {username: '', password: ''};
-
-	const VALIDATION_SCHEMA = Yup.object({
-		username: Yup.string()
-			.max(15, 'Must be 15 characters or less')
-			.required('Required'),
-		password: Yup.string().required('Password is required'),
-	});
+const VALIDATION_SCHEMA = Yup.object({
+	username: Yup.string()
+		.max(15, 'Must be 15 characters or less')
+		.required('Required'),
+	password: Yup.string().required('Password is required'),
+});
 
 
-	const onSubmit = async (values, actions) => {
-		await login(values.username, values.password)
+const LogIn = () => {
+
+	const dispatch = useDispatch();
+	const isAuthenticated = useSelector(selectIsAuthenticated);
+
+	const onSubmit = async ({username, password}, actions) => {
+		await dispatch(login(username, password));
 	}
 
 	return (
@@ -100,12 +102,4 @@ const LogIn = ({ isAuthenticated, login }) => {
 	);
 };
 
-const mapStateToProps = createStructuredSelector({
-	isAuthenticated: selectIsAuthenticated,
-})
-
-const mapDispatchToProps = dispatch => ({
-	login: (email, password) => dispatch(login(email, password)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(LogIn);
+export default LogIn;
