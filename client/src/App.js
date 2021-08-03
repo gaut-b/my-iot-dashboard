@@ -15,7 +15,7 @@ import './App.css';
 const App = () => {
 	const isAuthenticated = useSelector(selectIsAuthenticated);
 	const isLoading = useSelector(selectIsLoading);
-	console.log(isAuthenticated)
+
   return (
   	<Switch>
   		<PublicRoute restricted={true} exact path='/login' isAuthenticated={isAuthenticated} component={LogInPage} />
