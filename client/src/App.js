@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { useSelector } from 'react-redux';
 import { Switch } from 'react-router-dom';
 import { selectIsAuthenticated, selectIsLoading } from './redux/auth/auth.selectors';
 
@@ -13,7 +12,10 @@ import SignUpPage from './pages/signUpPage/signUpPage.component';
 import 'bootswatch/dist/lumen/bootstrap.css';
 import './App.css';
 
-const App = ({ isAuthenticated, isLoading }) => {
+const App = () => {
+	const isAuthenticated = useSelector(selectIsAuthenticated);
+	const isLoading = useSelector(selectIsLoading);
+
   return (
   	<Switch>
   		<PublicRoute restricted={true} exact path='/login' isAuthenticated={isAuthenticated} component={LogInPage} />
@@ -23,9 +25,4 @@ const App = ({ isAuthenticated, isLoading }) => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({
-	isAuthenticated: selectIsAuthenticated,
-	isLoading: selectIsLoading,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;

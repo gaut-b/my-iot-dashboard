@@ -21,7 +21,7 @@ if (localStorage.getItem('refresh')) {
 const INITIAL_STATE = {
 	access,
 	refresh,
-	isAuthenticated: false, // Set to true for development purpose. Need to be false in production
+	isAuthenticated: access && refresh, // Set to true for development purpose. Need to be false in production
 	isRefreshingToken: false,
 	isLoading: false,
 	errors: {},
@@ -55,7 +55,9 @@ const authReducer = (state = INITIAL_STATE, action ) => {
 			};
 
     case AuthTypes.LOGOUT_SUCCESSFUL:
-      localStorage.removeItem("token");
+      localStorage.removeItem("access");
+			localStorage.removeItem("refresh");
+
       return {
       	...state,
       	errors: action.payload,

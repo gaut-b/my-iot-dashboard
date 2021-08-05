@@ -1,26 +1,27 @@
 import { createSelector } from 'reselect';
+import get from 'lodash.get';
 
 export const selectAuth = state => state.auth;
 
 export const selectAccessToken = createSelector(
 	[selectAuth],
-	auth => auth.access.token
+	auth => get(auth, 'access.token')
 );
 
 export const selectIsLoading = createSelector(
 	[selectAuth],
-	auth => auth.isLoading
+	auth => get(auth, 'isLoading', false)
 );
 
 export const selectRefreshToken = createSelector(
 	[selectAuth],
-	auth => auth.refresh.token
+	auth => get(auth, 'refresh.token')
 );
 
 export const selectIsAccessTokenExpired = createSelector(
 	[selectAuth],
 	auth => {
-		if (auth.access && auth.access.exp) {
+		if (get(auth, 'access.exp')) {
 			return (1000 * auth.access.exp - (new Date()).getTime() < 5000);
 		}
 		return true;
@@ -30,8 +31,9 @@ export const selectIsAccessTokenExpired = createSelector(
 export const selectIsRefreshTokenExpired = createSelector(
 	[selectAuth],
 	auth => {
-		if (auth.refreshToken && auth.refreshToken.exp) {
-			return (1000 * auth.refreshToken.exp - (new Date()).getTime() < 5000);
+		const exp = get(auth, 'refreshToken.exp');
+		if (exp) {
+			return (1000 * exp - (new Date()).getTime() < 5000);
 		}
 		return true;
 	}
@@ -39,6 +41,6 @@ export const selectIsRefreshTokenExpired = createSelector(
 
 export const selectIsAuthenticated = createSelector(
 	[selectAuth],
-	auth => auth.isAuthenticated,
+	auth => get(auth, 'isAuthenticated'),
 );
 

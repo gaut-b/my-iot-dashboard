@@ -1,5 +1,7 @@
 import AuthTypes from './auth.types.js';
 
+export const logout = () => ({type: AuthTypes.LOGOUT_SUCCESSFUL})
+
 const setUserLoading = () => ({type: AuthTypes.USER_LOADING});
 
 const setUserLoaded = () => ({type: AuthTypes.USER_LOADED});
@@ -56,10 +58,10 @@ export const loadUser = () => {
   }
 };
 
-export const login = (email, password) => {
+export const login = (username, password) => {
 	return (dispatch, getState) => {
 		let headers = {"Content-Type": "application/json"};
-		let body = JSON.stringify({username:'test', password:'test'})
+		let body = JSON.stringify({username, password})
 
 		return fetch("http://localhost:8000/login/", {headers, body, method: "POST"})
 			.then(res => {

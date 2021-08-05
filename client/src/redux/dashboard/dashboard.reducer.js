@@ -29,7 +29,7 @@ const dashboardReducer = (state = INITIAL_STATE, action) => {
 					id: id,
 					...action.payload,
 			};
-			console.log([...state, newChart])
+			// console.log([...state, newChart])
 			return [...state, newChart];
 		};
 

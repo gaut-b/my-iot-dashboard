@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -34,10 +34,11 @@ const INITIAL_VALUES = {
 	maxColor: '#4834d4',
 }
 
-const GaugeForm = ({ createChart, history }) => {
+const GaugeForm = ({ history }) => {
 
-	const handleSubmit = (values) => {
-		createChart(values);
+	const dispatch = useDispatch();
+	const handleSubmit = (graphData) => {
+		dispatch(createChart(graphData))
 	}
 
 	const fields = Object.keys(ACCESSORS).map( (key) => {
@@ -176,11 +177,7 @@ const GaugeForm = ({ createChart, history }) => {
 	);
 };
 
-const mapDispatchToProps = dispatch => ({
-	createChart: (graphData) => dispatch(createChart(graphData)),
-})
-
-export default connect(null, mapDispatchToProps)(GaugeForm);
+export default GaugeForm;
 
 // <div className='formContainer'>
 // 			<div className='title'>Create a gauge</div>
