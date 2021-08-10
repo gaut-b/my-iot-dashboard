@@ -30,8 +30,8 @@ const LogIn = () => {
 	const dispatch = useDispatch();
 	const isAuthenticated = useSelector(selectIsAuthenticated);
 
-	const onSubmit = async ({username, password}, actions) => {
-		await dispatch(login(username, password));
+	const onSubmit = ({username, password}, actions) => {
+		dispatch(login(username, password));
 	}
 
 	return (

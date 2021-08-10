@@ -5,7 +5,8 @@ import rootReducer from './root-reducer';
 import AuthMiddleware from './middlewares/authMiddleware';
 import thunk from 'redux-thunk';
 
-const middlewares = [thunk, AuthMiddleware]
+// const middlewares = [thunk, AuthMiddleware]
+const middlewares = [thunk]
 
 if (process.env.NODE_ENV === 'development') {
 	middlewares.push(logger)

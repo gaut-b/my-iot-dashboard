@@ -1,4 +1,5 @@
 import AuthTypes from './auth.types.js';
+import {notify} from 'reapop'
 
 export const logout = () => ({type: AuthTypes.LOGOUT_SUCCESSFUL})
 
@@ -23,7 +24,7 @@ const setRefreshSuccessful = (data) => ({
 });
 
 export const loadUser = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(setUserLoading);
 
     const token = getState().auth.token;
@@ -35,89 +36,60 @@ export const loadUser = () => {
     if (token) {
       headers["Authorization"] = `Token ${token}`;
     }
-    return fetch("/api/auth/user/", {headers, })
-      .then(res => {
-        if (res.status < 500) {
-          return res.json().then(data => {
-            return {status: res.status, data};
-          })
-        } else {
-          console.log("Server Error!");
-          throw res;
-        }
-      })
-      .then(res => {
-        if (res.status === 200) {
-          dispatch(setUserLoaded());
-          return res.data;
-        } else if (res.status >= 400 && res.status < 500) {
-          dispatch(setAuthentificationError());
-          throw res.data;
-        }
-      })
+    const response = await fetch("/api/auth/user/", {headers, });
+    const {status} = response;
+    const data = await response.json();
+    if (status === 200) {
+      dispatch(setUserLoaded());
+      return res.data;
+
+    }
+    dispatch(setAuthentificationError());
+    dispatch(notify('Something went wrong', error))
+    return;
   }
 };
 
 export const login = (username, password) => {
-	return (dispatch, getState) => {
+	return async (dispatch, getState) => {
 		let headers = {"Content-Type": "application/json"};
 		let body = JSON.stringify({username, password})
 
-		return fetch("http://localhost:8000/login/", {headers, body, method: "POST"})
-			.then(res => {
-				if (res.status < 500) {
-					return res.json().then( data => {
-						return {status: res.status, data}
-					})
-				} else {
-					console.log("Server error !")
-					throw res;
-				}
-			})
-			.then(res => {
-				if (res.status === 200) {
-					dispatch(setLoginSuccessful(res.data));
-					return res.data;
-				} else if (res.status === 403 || res.status === 401) {
-						dispatch(setAuthentificationError());
-						throw res.data;
-				} else {
-					dispatch(setLoginFailed());
-					throw res.data;
-				}
-			})
+    try {
+      const response = await fetch("http://localhost:8000/login/", {headers, body, method: "POST"})
+      const {status} = response;
+      const data = await response.json();
+      if (status === 200) {
+        dispatch(setLoginSuccessful(data));
+        dispatch(notify('Login successfull', 'success'));
+        return;
+      }
+      dispatch(notify(data, 'error'));
+      return;
+    } catch (err) {
+      return;
+    }
 	}
 };
 
 export const refreshToken = (refreshToken) => {
-    return (dispatch, getState) => {
+    return async (dispatch, getState) => {
 
     let headers = {"Content-Type": "application/json"};
     let body = JSON.stringify({refresh: refreshToken})
     dispatch(setIsRefreshingToken())
-    return fetch("http://localhost:8000/token/refresh/", {headers, body, method: "POST"})
-     .then(res => {
-       if (res.status < 500) {
-         return res.json().then( data => {
-           return {status: res.status, data}
-         })
-       } else {
-         console.log("Server error !")
-         throw res;
-       }
-     })
-     .then(res => {
-       if (res.status === 200) {
-         dispatch(setRefreshSuccessful(res.data));
-         return res.data;
-       } else if (res.status === 403 || res.status === 401) {
-           dispatch(setAuthentificationError());
-           throw res.data;
-       } else {
-         dispatch(setLoginFailed());
-         throw res.data;
-       }
-     })
+   
+    const response = await fetch("http://localhost:8000/token/refresh/", {headers, body, method: "POST"})
+    const {status} = response;
+    const data = await response.json();
+
+    if (status === 200) {
+      dispatch(setRefreshSuccessful(res.data));
+      return;
+    }
+    dispatch(setAuthentificationError());
+    dispatch(notify('Something went wrong', error))
+    return;
   }
 };
 
