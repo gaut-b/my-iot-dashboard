@@ -1,9 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteChart } from '../../redux/dashboard/dashboard.actions';
-import ChartTypes from '../chart/utils/chart.types.js';
-import LineChart from '../lineChart/lineChart.component';
-import Gauge from '../gaugeChart/gaugeChart.component';
+
+import { deleteChart } from '@redux/dashboard/dashboard.actions';
+
+import ChartTypes from '@components/chart/utils/chart.types.js';
+import LineChart from '@components/lineChart/LineChart';
+import Gauge from '@components/gaugeChart/GaugeChart';
 
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -11,7 +13,7 @@ import Card from 'react-bootstrap/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-import './chartContainer.styles.scss';
+import './ChartContainer.scss';
 
 const ChartContainer = ({ isEditing, chartInfos, data, chartIndex }) => {
 

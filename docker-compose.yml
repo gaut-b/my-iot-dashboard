@@ -28,7 +28,29 @@ services:
           - ./.env.dev
         depends_on:
           - db
+          - mongo
 
+    mongo:
+      image: mongo:latest
+      restart: always
+      volumes:
+          - mongodb_data:/var/lib/mongodb/data
+      environment: 
+        MONGO_INITDB_ROOT_USERNAME: iotDashboard
+        MONGO_INITDB_ROOT_PASSWORD: iotDashboard
+        MONGO_INITDB_DATABASE: iotDashboard_dev
+    
+    # Add Mongo Express for debugging purposes. Will be removed in next commits
+    mongo-express:
+      image: mongo-express:latest
+      ports:
+        - 8081:8081
+      depends_on: 
+        - server
+      environment: 
+        ME_CONFIG_MONGODB_ADMINUSERNAME: iotDashboard
+        ME_CONFIG_MONGODB_ADMINPASSWORD: iotDashboard
+      
     db:
         image: postgres:latest
         volumes:
@@ -47,4 +69,5 @@ services:
 
 volumes:
   postgres_data:
+  mongodb_data:
   redis_data:

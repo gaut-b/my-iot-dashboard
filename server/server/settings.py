@@ -95,9 +95,23 @@ DATABASES = {
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
+    },
+    "data": {
+        "ENGINE": os.environ.get("NOSQL_ENGINE", "djongo"),
+        "NAME": os.environ.get("NOSQL_DATABASE", "test"),
+        'ENFORCE_SCHEMA': False,
+        "CLIENT": {
+            "host": os.environ.get("NOSQL_HOST", "localhost"),
+            "port": int(os.environ.get("NOSQL_PORT", "27017")),
+            "username": os.environ.get("NOSQL_USER", "user"),
+            "password": os.environ.get("NOSQL_PASSWORD", "password"),
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        },
     }
 }
 
+DATABASE_ROUTERS = ['api.router.ModelMetaRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

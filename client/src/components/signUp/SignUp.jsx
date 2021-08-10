@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { Link, Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { login } from '../../redux/auth/auth.actions';
-import { selectIsAuthenticated } from '../../redux/auth/auth.selectors';
+import { selectIsAuthenticated } from '@redux/auth/auth.selectors';
 
-import Alert from 'react-bootstrap/Alert';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';

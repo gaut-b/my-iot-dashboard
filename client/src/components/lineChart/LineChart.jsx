@@ -1,14 +1,14 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-import Chart from '../chart/chart.component';
-import Line from '../chart/line.component';
-import Circles from '../chart/circles.component';
-import Axis from '../chart/axis.component'
-import ACCESSORS from '../chart/utils/accessors.js';
-import { useChartDimensions } from '../chart/utils/useChartDimensions';
+import Chart from '@components/chart/Chart';
+import Line from '@components/chart/Line';
+import Circles from '@components/chart/Circles';
+import Axis from '@components/chart/Axis'
+import ACCESSORS from '@components/chart/utils/accessors.js';
+import { useChartDimensions } from '@components/chart/utils/useChartDimensions';
 
-import './lineChart.styles.scss';
+import './LineChart.scss';
 
 const LineChart = ({ data, chartInfos }) => {
 

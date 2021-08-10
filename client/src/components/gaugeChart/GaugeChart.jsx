@@ -4,7 +4,7 @@ import { scaleLinear } from "d3-scale"
 import { format } from "d3-format"
 import ACCESSORS from '../chart/utils/accessors.js';
 
-import './gaugeChart.styles.scss'
+import './GaugeChart.scss'
 
 const Gauge = ({ data, chartInfos }) => {
 

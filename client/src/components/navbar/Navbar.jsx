@@ -3,16 +3,16 @@ import { useDispatch } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
 import { LinkContainer } from 'react-router-bootstrap'
 
-import { logout } from '../../redux/auth/auth.actions'
+import { logout } from '@redux/auth/auth.actions'
 
-import logo from '../../assets/logo.png';
+import logo from '@assets/logo.png';
 
 import Button from 'react-bootstrap/Button';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-import './navbar.styles.scss';
+import './Navbar.scss';
 
 const NavbarComponent = () => {
   const dispatch = useDispatch();
