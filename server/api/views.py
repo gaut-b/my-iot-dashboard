@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from api.models import Device, Data
-from api.serializers import DataSerializer, DeviceSerializer, LogInSerializer, UserSerializer, NestedUserSerializer
+from api.models import Device, Data, Parser
+from api.serializers import DataSerializer, DeviceSerializer, LogInSerializer, UserSerializer, NestedUserSerializer, ParserSerializer
 from rest_framework import generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -13,6 +13,11 @@ class UserList(generics.ListAPIView):
     class Meta:
         ordering = ['-id']
 
+
+class ParserList(generics.ListCreateAPIView):
+    queryset = Parser.objects.all()
+    serializer_class = ParserSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
 
 class DataList(generics.ListCreateAPIView):
     queryset = Data.objects.all()

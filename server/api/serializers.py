@@ -1,24 +1,28 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from api.models import Device, Data
+from api.models import Device, Data, Parser
 
 import datetime
 
 
 class DeviceSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-
     class Meta:
         model = Device
         fields = ['model', 'deviceId', 'firmware', 'owner']
 
+class ParserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parser
+        fields = '__all__'
 
+        
 class DataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Data
-        fields = ['deviceId', 'rawData', 'time', 'temp', 'pressure', 'humidity', 'luminosity', 'batteryLevel']
-        read_only_fields = ['temp', 'pressure', 'humidity', 'luminosity', 'batteryLevel']
+        fields = ['deviceId', 'rawData', 'time', 'data' ]
+        # read_only_fields = ['temp', 'pressure', 'humidity', 'luminosity', 'batteryLevel']
 
     def to_internal_value(self, data):
         # Convert the time send by SIGFOX (epoch) into a right format for DateTimeFied

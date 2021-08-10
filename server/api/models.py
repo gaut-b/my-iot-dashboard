@@ -3,14 +3,14 @@ from django.contrib.auth.models import AbstractUser
 from djongo import models
 from django.conf import settings
 from django.utils.timezone import now
-from api.utils.utils import parser
+# from api.utils.utils import parser
+
 import django.db.models.options as options
 
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('in_db',)
 
 class User(AbstractUser):
     pass
-
 
 class Device(models.Model):
     class Meta:
@@ -25,30 +25,42 @@ class Device(models.Model):
     def __str__(self):
         return self.deviceId
 
+    def save(self, *args, **kwargs):
+        super(Device, self).save(*args, **kwargs)
+
+class Parser(models.Model):
+    class Meta:
+        in_db = 'data'
+
+    deviceId = models.ForeignKey('Device', to_field='deviceId', on_delete=models.CASCADE)
+    parser = models.TextField()
+
+    # def __str__(self):
+    #     return self.parser
 
 class Data(models.Model):
     class Meta:
         in_db = 'data'
 
-    # deviceId = models.EmbeddedField(model_container=Device)
     deviceId = models.ForeignKey('Device', to_field='deviceId', on_delete=models.CASCADE)
     rawData = models.CharField(max_length=24, blank=False, null=False)
-    temp = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    humidity = models.PositiveSmallIntegerField(default=0)
-    pressure = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    luminosity = models.PositiveSmallIntegerField(default=0)
-    batteryLevel = models.PositiveSmallIntegerField(default=0)
+    data = models.JSONField(null=True)
+
     time = models.DateTimeField(null=False, default=now)
 
     def save(self, *args, **kwargs):
         """
         Use the parser utility functions in utils to decode the payload
+        VERY DANGEROUS AS IS
+        TODO: Find a way to encapsulate the execution or find another implementation
         """
-        print(self)
-        firmware = Device.objects.get(deviceId=self.deviceId).firmware
-        parsedData = parser(self.rawData, firmware)
-
-        for data_item in parsedData.items():
-            setattr(self, *data_item)
+        ParserObject = Parser.objects.filter(deviceId=self.deviceId).first()
+        if ParserObject is not None:
+            textParser = ParserObject.parser
+            exec(textParser, globals())
+            parsedData = parser(self.rawData)
+            self.data=parsedData
+        else: 
+            self.data={}
 
         super(Data, self).save(*args, **kwargs)
