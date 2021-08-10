@@ -1,5 +1,5 @@
 import React from 'react';
-import SignUp from '../../components/signUp/signUp.component';
+import SignUp from '@components/signUp/SignUp';
 
 import Container from 'react-bootstrap/Container';
 

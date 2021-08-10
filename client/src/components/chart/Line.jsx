@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { accessorPropsType } from './utils/useChartDimensions';
 
-import './chart.styles.scss';
+import './Chart.scss';
 
 import * as d3 from 'd3';
 

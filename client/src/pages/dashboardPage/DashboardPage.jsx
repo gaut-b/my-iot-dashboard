@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { initData, addLastData } from '../../redux/data/data.actions';
-import { updateLayout } from '../../redux/dashboard/dashboard.actions';
 
-import ChartContainer from '../../components/chartContainer/chartContainer.component';
-import ChartCreatorContainer from '../../components/chartCreatorContainer/chartCreatorContainer.component';
+import { initData, addLastData } from '@redux/data/data.actions';
+import { updateLayout } from '@redux/dashboard/dashboard.actions';
+
+import ChartContainer from '@components/chartContainer/ChartContainer';
+import ChartCreatorContainer from '@components/chartCreatorContainer/ChartCreatorContainer';
 
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 
-import './dashboardPage.styles.scss';
+import './DashboardPage.scss';
 // Import needed for react-grid-layout
-import '../../../node_modules/react-grid-layout/css/styles.css';
-import '../../../node_modules/react-resizable/css/styles.css';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

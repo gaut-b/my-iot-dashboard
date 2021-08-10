@@ -1,7 +1,7 @@
 import struct
 import binascii
 
-def parser():
+def parser(payload):
     def hexToDecimal(bytes):
         format = '>H'
         if len(bytes) == 2:

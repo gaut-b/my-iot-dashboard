@@ -4,6 +4,12 @@ import { selectAuth, selectRefreshToken, selectIsAccessTokenExpired } from '../a
 import { refreshToken } from '../auth/auth.actions';
 
 let actionBuffer = [];
+const {
+	LOGIN_SUCCESSFUL,
+	LOGOUT_SUCCESSFUL,
+	REFRESH_TOKEN_REQUEST,
+	REFRESH_TOKEN_SUCCESS
+} = AuthTypes;
 
 // Check if the accessToken is expired
 // If it is, it's store the pending actions during the refresh action
@@ -14,16 +20,19 @@ const authMiddleware = (store) => next => action => {
 	const isAccessTokenExpired = selectIsAccessTokenExpired(state);
 	const token = selectRefreshToken(state);
 
+	const {type: actionType} = action;
+	const isLoginAction = actionType === LOGIN_SUCCESSFUL || actionType === LOGOUT_SUCCESSFUL;
+
 	// If action is requesting a new token or logging in, we return the action to the next reducer
-	if (action.type === AuthTypes.REFRESH_TOKEN_REQUEST || action.type === AuthTypes.LOGIN_SUCCESSFUL) {
+	if (actionType === REFRESH_TOKEN_REQUEST || isLoginAction) {
 		return next(action);
-	} else if (action.type === AuthTypes.REFRESH_TOKEN_SUCCESS) {
+	} else if (action.type === REFRESH_TOKEN_SUCCESS) {
 
 		next(action)
 
 		// Dispatching all stored actions
 		if (actionBuffer.length > 0) {
-			actionBuffer.forEach(action => next(action));
+			actionBuffer.forEach(next);
 			actionBuffer = [];
 		}
 	} else if (isAccessTokenExpired) {
@@ -35,7 +44,7 @@ const authMiddleware = (store) => next => action => {
 			}
 	}
 
-	if (!isAccessTokenExpired && action.type !== AuthTypes.REFRESH_TOKEN_SUCCESS) {
+	if (!isAccessTokenExpired && actionType !== REFRESH_TOKEN_SUCCESS) {
 		return next(action);
 	}
 }

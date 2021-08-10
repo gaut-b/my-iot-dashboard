@@ -1,5 +1,5 @@
 import React from 'react';
-import LogIn from '../../components/logIn/logIn.component';
+import LogIn from '@components/logIn/LogIn';
 
 import Container from 'react-bootstrap/Container';
 

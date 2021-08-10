@@ -1,9 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 
-import { createChart } from '../../redux/dashboard/dashboard.actions';
+import { createChart } from '@redux/dashboard/dashboard.actions';
 import ChartTypes from '../chart/utils/chart.types';
 import ACCESSORS from '../chart/utils/accessors';
 
@@ -13,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-import './gaugeChartForm.styles.scss';
+import './GaugeChartForm.scss';
 
 const INITIAL_VALUES = {
 	dataGrid: {

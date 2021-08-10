@@ -1,7 +1,7 @@
 import React from 'react';
-import LineChartForm from '../lineChartForm/lineChartForm.component';
-import GaugeChartForm from '../gaugeChartForm/gaugeChartForm.component';
-import Sidebar from '../sidebar/sidebar.component';
+import LineChartForm from '@components/lineChartForm/LineChartForm';
+import GaugeChartForm from '@components/gaugeChartForm/GaugeChartForm';
+import Sidebar from '@components/sidebar/Sidebar';
 
 import Container from 'react-bootstrap/Container';
 import Tabs from 'react-bootstrap/Tabs';
@@ -10,7 +10,7 @@ import Tab from 'react-bootstrap/Tab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChartLine, faChartBar, faTachometerAlt } from '@fortawesome/free-solid-svg-icons'
 
-import './chartCreatorContainer.styles.scss';
+import './ChartCreatorContainer.scss';
 
 const ChartCreatorContainer = ({ isSidebarVisible, toggleSidebar }) => {
 

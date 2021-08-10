@@ -2,7 +2,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import { withRouter } from 'react-router-dom';
-import { createChart } from '../../redux/dashboard/dashboard.actions';
+
+import { createChart } from '@redux/dashboard/dashboard.actions';
+
 import ChartTypes from '../chart/utils/chart.types';
 import ACCESSORS from '../chart/utils/accessors';
 
@@ -12,7 +14,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-import './lineChartForm.styles.scss';
+import './LineChartForm.scss';
 
 const INITIAL_STATE = {
 	dataGrid: {

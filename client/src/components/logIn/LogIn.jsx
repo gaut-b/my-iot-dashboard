@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { login } from '../../redux/auth/auth.actions';
-import { selectIsAuthenticated } from '../../redux/auth/auth.selectors';
+import { login } from '@redux/auth/auth.actions';
+import { selectIsAuthenticated } from '@redux/auth/auth.selectors';
 
 import Alert from 'react-bootstrap/Alert';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
